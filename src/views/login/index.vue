@@ -72,11 +72,15 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref } from 'vue';
 import forget_password from './components/forget_password.vue';
-
+import { login, register } from '../../api/login';
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router';
 
 const activeName = ref('first')
+
+const router = useRouter()
 
 interface fromDate {
   account: number | null;
@@ -86,34 +90,64 @@ interface fromDate {
 }
 
 // 忘记密码弹窗
-  const forgetP = ref()
-	// 打开忘记密码弹窗
-	const openForget = () => {
-		forgetP.value.open()
-	}
+const forgetP = ref()
+// 打开忘记密码弹窗
+const openForget = () => {
+  forgetP.value.open()
+}
 
-  // 登录
-  const Login = () =>{
-
-  }
-
-  // 注册
-  const Register = () =>{
-
-  }
 
 const loginDate: fromDate = reactive({
-  account: null ,
+  account: null,
   password: '',
 
 })
 
 const registerData: fromDate = reactive({
-  account: null ,
+  account: null,
   password: '',
   rePassword: '',
 
 })
+
+// 登录
+const Login = async () => {
+  const res = await login(loginDate)
+  const { token } = res.data
+  if (res.data.message == '登录成功') {
+    ElMessage({
+      message: '登录成功',
+      type: 'success',
+    })
+    localStorage.setItem('token',token)
+    router.push('/home')
+
+  } else {
+    ElMessage.error('登录失败,检查数据')
+
+  }
+}
+
+// 注册
+const Register = async () => {
+  if (registerData.rePassword == registerData.password) {
+    const res = await register(registerData)
+    if (res.data.message == '注册成功') {
+      ElMessage({
+        message: '注册成功',
+        type: 'success',
+      })
+      activeName.value = 'first'
+    } else {
+      ElMessage.error('注册失败,检查数据')
+    }
+  } else {
+    ElMessage.error('注册失败,检查数据')
+  }
+
+}
+
+
 
 
 </script>
