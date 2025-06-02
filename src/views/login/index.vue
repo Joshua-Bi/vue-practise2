@@ -28,7 +28,7 @@
                       <el-button type="primary" @click="Login">登录</el-button>
                     </div>
                     <div class="footer-go-register">
-                      还没有账号？<span class="go-register">马上注册</span>
+                      还没有账号？<span class="go-register" @click="goRegister">马上注册</span>
                     </div>
                   </div>
                 </el-form>
@@ -77,10 +77,12 @@ import forget_password from './components/forget_password.vue';
 import { login, register } from '../../api/login';
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router';
+import { userInforStore } from '../../store/userinfor';
 
 const activeName = ref('first')
 
 const router = useRouter()
+const store = userInforStore()
 
 interface fromDate {
   account: number | null;
@@ -113,13 +115,28 @@ const registerData: fromDate = reactive({
 // 登录
 const Login = async () => {
   const res = await login(loginDate)
+  console.log(res)
+  const {id,name,email,sex,department,identity} = res.data
   const { token } = res.data
   if (res.data.message == '登录成功') {
     ElMessage({
       message: '登录成功',
       type: 'success',
+    
     })
     localStorage.setItem('token',token)
+    localStorage.setItem('name', name)
+    localStorage.setItem('department', department)
+    
+    // 使用响应式更新
+    store.$patch({
+        name: res.data.data.name,
+        sex: res.data.sex,
+        department: res.data.department,
+        identity: res.data.identity
+    })
+    
+    store.userInfor(id)
     router.push('/home')
 
   } else {
@@ -147,7 +164,9 @@ const Register = async () => {
 
 }
 
-
+const goRegister = () => {
+  activeName.value = 'second'; // 切换到注册选项卡
+};
 
 
 </script>

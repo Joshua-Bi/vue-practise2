@@ -83,7 +83,7 @@
             </el-aside>
             <el-container>
                 <el-header>
-                    <span class="header-left-content">尊敬的来客欢迎您登录本系统</span>
+                    <span class="header-left-content">尊敬的{{userStore.name}}欢迎您登录本系统</span>
                     <div class="header-right-content">
                         <el-badge :is-dot=true class="item" @click="openDepartmentMessage">
                             <el-icon :size="20" class="message">
@@ -106,6 +106,9 @@
                     </div>
 
                 </el-header>
+                <el-main>
+					<router-view></router-view>
+				</el-main>
             </el-container>
         </el-container>
     </div>
@@ -119,8 +122,10 @@ import {
 import { timelineItemProps } from 'element-plus';
 import { reactive, ref, toRefs } from 'vue'
 import {useRouter} from 'vue-router';
+import { userInforStore } from '@/store/userinfor'
 
 const router = useRouter()
+const userStore = userInforStore()
 
 const state = reactive({
     circleUrl:
@@ -205,7 +210,7 @@ const { circleUrl } = toRefs(state)
 
 .el-main {
     --el-main-padding: 0;
-    background-color: #262f3e;
+    background-color: #e1e6ef;
     height: calc(100vh - 55px);
 }
 

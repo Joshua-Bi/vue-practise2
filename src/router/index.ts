@@ -1,5 +1,4 @@
-import { createRouter, createMemoryHistory } from 'vue-router'
-
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes: any = [{
     path: '/',
@@ -18,14 +17,20 @@ const routes: any = [{
         name: 'home',
         path: '/home',
         component: () => import('@/views/home/index.vue')
+    },
+    {
+        name: 'set',
+        path: '/set',
+        component: () => import('@/views/set/index.vue')
     }
+
     ]
     
     }
 ]
 
 const router = createRouter({
-    history: createMemoryHistory(),
+    history: createWebHashHistory(),
     routes
 })
 
